@@ -1,0 +1,329 @@
+#########################################################
+#  　　　PostgreSQL Schemaとユーザーについての確認
+#########################################################
+
+
+
+
+#########################　動作確認ユーザー作成
+
+-bash-4.2$ psql postgres -c  "CREATE ROLE user_a LOGIN;"
+CREATE ROLE
+-bash-4.2$ psql postgres -c  "CREATE ROLE user_b LOGIN;"
+CREATE ROLE
+-bash-4.2$ psql postgres -c  "ALTER ROLE user_a WITH PASSWORD 'password';"
+ALTER ROLE
+-bash-4.2$ psql postgres -c  "ALTER ROLE user_b WITH PASSWORD 'password';"
+ALTER ROLE
+-bash-4.2$ psql postgres -c  "ALTER ROLE user_a SUPERUSER;"
+ALTER ROLE
+-bash-4.2$ psql postgres -c  "ALTER ROLE user_b SUPERUSER;"
+ALTER ROLE
+-bash-4.2$ psql postgres -c  "\du"
+                                                          ロール一覧
+     ロール名     |                                   属性                                   |          所属グループ          
+------------------+--------------------------------------------------------------------------+--------------------------------
+ admin            | スーパユーザ                                                             | {pg_monitor,pg_signal_backend}
+ application_role | スーパユーザ                                                             | {}
+ postgres         | スーパユーザ, ロール作成可, DB作成可, レプリケーション可, RLS のバイパス | {}
+ replication_user | レプリケーション可                                                       | {}
+ user_a           | スーパユーザ                                                             | {}
+ user_b           | スーパユーザ                                                             | {}
+
+-bash-4.2$ 
+
+
+#########################　動作確認データベース作成
+
+-bash-4.2$ psql -c "create database users;"
+CREATE DATABASE
+-bash-4.2$
+
+-bash-4.2$ psql users -c "\dn"
+   スキーマ一覧
+  名前  |  所有者  
+--------+----------
+ public | postgres
+(1 行)
+
+
+#########################　DefaultはPublicなのでユーザー毎に専用を作成
+
+-bash-4.2$ psql users -c "CREATE SCHEMA user_a_schema AUTHORIZATION user_a;"
+CREATE SCHEMA
+-bash-4.2$ psql users -c "CREATE SCHEMA user_b_schema AUTHORIZATION user_b;"
+CREATE SCHEMA
+-bash-4.2$ psql users -c "\dn"
+       スキーマ一覧
+     名前      |  所有者  
+---------------+----------
+ public        | postgres
+ user_a_schema | user_a
+ user_b_schema | user_b
+(3 行)
+
+-bash-4.2$ 
+
+
+############　user_a　#############　動作確認用オブジェクトを作成（スキーマが違えば、同じデータベースにでも同じ名前を付ける事が出来る）
+
+
+-bash-4.2$ psql users -U user_a
+ユーザ user_a のパスワード: 
+psql (12.0)
+"help"でヘルプを表示します。
+
+users=# \d
+リレーションが見つかりませんでした。
+users=# \dn
+       スキーマ一覧
+     名前      |  所有者  
+---------------+----------
+ public        | postgres
+ user_a_schema | user_a
+ user_b_schema | user_b
+(3 行)
+
+users=# CREATE SEQUENCE user_id START 1;
+CREATE SEQUENCE
+users=# \d
+             リレーション一覧
+ スキーマ |  名前   |     型     | 所有者 
+----------+---------+------------+--------
+ public   | user_id | シーケンス | user_a
+(1 行)
+
+users=# CREATE SEQUENCE user_a_schema.user_id START 1;
+CREATE SEQUENCE
+users=# \d
+             リレーション一覧
+ スキーマ |  名前   |     型     | 所有者 
+----------+---------+------------+--------
+ public   | user_id | シーケンス | user_a
+(1 行)
+
+users=# select current_schema;
+ current_schema 
+----------------
+ public
+(1 行)
+
+users=# set search_path to user_a_schema;
+SET
+users=# select current_schema;
+ current_schema 
+----------------
+ user_a_schema
+(1 行)
+
+users=# SHOW search_path;
+  search_path  
+---------------
+ user_a_schema
+(1 行)
+
+users=# \d
+               リレーション一覧
+   スキーマ    |  名前   |     型     | 所有者 
+---------------+---------+------------+--------
+ user_a_schema | user_id | シーケンス | user_a
+(1 行)
+
+users=# CREATE SEQUENCE user_id_samename START 1;
+CREATE SEQUENCE
+users=# \d
+                    リレーション一覧
+   スキーマ    |       名前       |     型     | 所有者 
+---------------+------------------+------------+--------
+ user_a_schema | user_id          | シーケンス | user_a
+ user_a_schema | user_id_samename | シーケンス | user_a
+(2 行)
+
+users=# select current_database();
+ current_database 
+------------------
+ users
+(1 行)
+
+users=# CREATE SEQUENCE user_id_0 START 1;
+CREATE SEQUENCE
+users=# \d
+                    リレーション一覧
+   スキーマ    |       名前       |     型     | 所有者 
+---------------+------------------+------------+--------
+ user_a_schema | user_id          | シーケンス | user_a
+ user_a_schema | user_id_0        | シーケンス | user_a
+ user_a_schema | user_id_samename | シーケンス | user_a
+(3 行)
+
+users=# 
+
+
+
+
+############　user_b　#############　動作確認用オブジェクトを作成（スキーマが違えば、同じデータベースにでも同じ名前を付ける事が出来る）
+
+-bash-4.2$ psql users -U user_b
+ユーザ user_b のパスワード: 
+psql (12.0)
+"help"でヘルプを表示します。
+
+users=# \d
+リレーションが見つかりませんでした。
+users=# \dn
+       スキーマ一覧
+     名前      |  所有者  
+---------------+----------
+ public        | postgres
+ user_a_schema | user_a
+ user_b_schema | user_b
+(3 行)
+
+users=# \d
+             リレーション一覧
+ スキーマ |  名前   |     型     | 所有者 
+----------+---------+------------+--------
+ public   | user_id | シーケンス | user_a
+(1 行)
+
+users=# CREATE SEQUENCE user_b_schema.user_id START 1;
+CREATE SEQUENCE
+users=# \d
+             リレーション一覧
+ スキーマ |  名前   |     型     | 所有者 
+----------+---------+------------+--------
+ public   | user_id | シーケンス | user_a
+(1 行)
+
+users=# select current_schema;
+ current_schema 
+----------------
+ public
+(1 行)
+
+users=# set search_path to user_b_schema;
+SET
+users=# select current_schema;
+ current_schema 
+----------------
+ user_b_schema
+(1 行)
+
+users=# SHOW search_path;
+  search_path  
+---------------
+ user_b_schema
+(1 行)
+
+users=# \d
+               リレーション一覧
+   スキーマ    |  名前   |     型     | 所有者 
+---------------+---------+------------+--------
+ user_b_schema | user_id | シーケンス | user_b
+(1 行)
+
+users=# CREATE SEQUENCE user_id_samename START 1;
+CREATE SEQUENCE
+users=# \d
+                    リレーション一覧
+   スキーマ    |       名前       |     型     | 所有者 
+---------------+------------------+------------+--------
+ user_b_schema | user_id          | シーケンス | user_b
+ user_b_schema | user_id_samename | シーケンス | user_b
+(2 行)
+
+users=# select current_database();
+ current_database 
+------------------
+ users
+(1 行)
+
+users=# 
+
+
+
+
+#############　user_a　############ それぞれのユーザーのDefaultスキーマを変更
+
+-bash-4.2$ psql -d users -U user_a -c "ALTER ROLE user_a SET search_path TO user_a_schema, pg_catalog";
+ユーザ user_a のパスワード: 
+ALTER ROLE
+-bash-4.2$ psql -d users -U user_a -c "create table users_table (id integer DEFAULT nextval('user_id'),name varchar (100));"
+ユーザ user_a のパスワード: 
+CREATE TABLE
+-bash-4.2$ psql -d users -U user_a -c "\d"
+ユーザ user_a のパスワード: 
+                    リレーション一覧
+   スキーマ    |       名前       |     型     | 所有者 
+---------------+------------------+------------+--------
+ user_a_schema | user_id          | シーケンス | user_a
+ user_a_schema | user_id_0        | シーケンス | user_a
+ user_a_schema | user_id_samename | シーケンス | user_a
+ user_a_schema | users_table      | テーブル   | user_a
+(4 行)
+
+-bash-4.2$  
+
+
+#############　user_b　############ それぞれのユーザーのDefaultスキーマを変更
+-bash-4.2$  psql -d users -U user_b -c "ALTER ROLE user_b SET search_path TO user_b_schema, pg_catalog";
+ユーザ user_b のパスワード: 
+ALTER ROLE
+-bash-4.2$ psql -d users -U user_b -c "create table users_table (id integer DEFAULT nextval('user_id'),name varchar (100));"
+ユーザ user_b のパスワード: 
+CREATE TABLE
+-bash-4.2$ psql -d users -U user_b -c "\d"
+ユーザ user_b のパスワード: 
+                    リレーション一覧
+   スキーマ    |       名前       |     型     | 所有者 
+---------------+------------------+------------+--------
+ user_b_schema | user_id          | シーケンス | user_b
+ user_b_schema | user_id_0        | シーケンス | user_b
+ user_b_schema | user_id_samename | シーケンス | user_b
+ user_b_schema | users_table      | テーブル   | user_b
+(4 行)
+
+-bash-4.2$ 
+
+
+
+######################### それぞれのユーザーのオブジェクトにデータを追加 (同じデータベースでもスキーマが違えば問題ない事が確認出来る）
+
+
+
+-bash-4.2$ psql -d users -U user_a -c "insert into users_table(id,name) values(nextval('user_id'),'on user_a and schema_a');"
+ユーザ user_a のパスワード: 
+INSERT 0 1
+
+-bash-4.2$ psql -d users -U user_a -c "insert into users_table(id,name) values(nextval('user_id'),'on user_a and schema_a');"
+ユーザ user_a のパスワード: 
+INSERT 0 1
+-bash-4.2$ psql -d users -U user_a -c "select id,name,to_char(now(), 'YYYY/MM/DD HH24:MI:SS'),current_database() from users_table;"
+ユーザ user_a のパスワード: 
+ id |          name          |       to_char       | current_database 
+----+------------------------+---------------------+------------------
+  1 | on user_a and schema_a | 2020/02/15 11:11:58 | users
+  2 | on user_a and schema_a | 2020/02/15 11:11:58 | users
+(2 行)
+
+-bash-4.2$ 
+
+
+
+
+-bash-4.2$ psql -d users -U user_b -c "insert into users_table(id,name) values(nextval('user_id'),'on user_b and schema_b');"
+ユーザ user_b のパスワード: 
+INSERT 0 1
+-bash-4.2$ psql -d users -U user_b -c "insert into users_table(id,name) values(nextval('user_id'),'on user_b and schema_b');"
+ユーザ user_b のパスワード: 
+INSERT 0 1
+-bash-4.2$ psql -d users -U user_b -c "select id,name,to_char(now(), 'YYYY/MM/DD HH24:MI:SS'),current_database() from users_table;"
+ユーザ user_b のパスワード: 
+ id |          name          |       to_char       | current_database 
+----+------------------------+---------------------+------------------
+  1 | on user_b and schema_b | 2020/02/15 11:11:47 | users
+  2 | on user_b and schema_b | 2020/02/15 11:11:47 | users
+(2 行)
+
+-bash-4.2$ 
+
