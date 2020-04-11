@@ -45,8 +45,27 @@ order by lock.pid;
 -[ RECORD 1 ]-----------
 locktype | transactionid
 relname  | 
-pid      | 3377
+pid      | 3377    /*** 他の処理のCommitを待っているPID ***/
 mode     | ShareLock
+-[ RECORD 2 ]-----------
+locktype | tuple
+relname  | memo
+pid      | 3713    /*** 3377を待っている為XロックになっているPID ***/
+mode     | ExclusiveLock
 
 
 ```
+
+
+- 自分のPIDを確認
+
+```
+app=# select pg_backend_pid();
+ pg_backend_pid 
+----------------
+           3375```
+
+```
+
+
+
