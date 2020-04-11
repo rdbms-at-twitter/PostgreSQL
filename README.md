@@ -63,7 +63,7 @@ mode     | ExclusiveLock
 app=# select pg_backend_pid();
  pg_backend_pid 
 ----------------
-           3375```
+           3375
 
 ```
 
