@@ -5,6 +5,8 @@ https://wiki.postgresql.org/wiki/Disk_Usage/ja
 
 #### 良く使うコマンド
 
+- 処理中Processの確認
+
 ```
 app=# select * from pg_stat_activity where pid = 2039;
 -[ RECORD 1 ]----+------------------------------
