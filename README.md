@@ -54,6 +54,18 @@ pid      | 3713    /*** 3377を待っている為XロックになっているPID
 mode     | ExclusiveLock
 
 
+/*** 上記の例だとPID3375のトランザクションがまだCommitされていない為Lockが発生していることが確認出来る ***/
+
+app=# SELECT pid, datname,query_start, substr(query, 0, 50),wait_event_type,state FROM pg_stat_activity  ORDER BY query_start;
+ pid  | datname |          query_start          |                      substr                       | wait_event_type |        state        
+------+---------+-------------------------------+---------------------------------------------------+-----------------+---------------------
+ 3375 | app     | 2020-04-11 20:04:56.542219+09 | update memo set data = pg_backend_pid() where id  | Client          | idle in transaction
+ 3377 | app     | 2020-04-11 20:05:01.342127+09 | update memo set data = pg_backend_pid() where id  | Lock            | active
+ 3713 | app     | 2020-04-11 20:05:06.666111+09 | update memo set data = pg_backend_pid() where id  | Lock            | active
+ 2154 | app     | 2020-04-11 20:05:17.885617+09 | SELECT pid, datname,query_start, substr(query, 0, |                 | active
+ 2030 |         |                               |                                                   | Activity        | 
+
+
 ```
 
 
