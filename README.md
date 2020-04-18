@@ -68,6 +68,36 @@ app=# SELECT pid, datname,query_start, substr(query, 0, 50),wait_event_type,stat
 
 ```
 
+- Lock PIDの確認（PostgreSQL9.6以降)
+
+```
+app=# select lock.locktype,class.relname,lock.pid,lock.mode from pg_locks lock
+left outer join pg_stat_activity act on lock.pid = act.pid left outer join
+pg_class class on lock.relation = class.oid where not lock.granted
+order by lock.pid;
+   locktype    | relname | pid  |     mode      
+---------------+---------+------+---------------
+ transactionid |         | 3377 | ShareLock
+ tuple         | memo    | 3713 | ExclusiveLock
+(2 行)
+
+app=# select  pg_blocking_pids(3377);
+ pg_blocking_pids 
+------------------
+ {3375}
+(1 行)
+
+app=# select  pg_blocking_pids(3713);
+ pg_blocking_pids 
+------------------
+ {3377}
+(1 行)
+
+```
+
+
+
+
 
 - 自分のPIDを確認
 
