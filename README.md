@@ -110,4 +110,36 @@ app=# select pg_backend_pid();
 ```
 
 
+- 統計情報の更新
+```
 
+app=# SELECT relpages, reltuples, reltuples/relpages as pagedata
+FROM pg_class WHERE relname = 'memo';
+ relpages | reltuples |      pagedata      
+----------+-----------+--------------------
+       11 |      1406 | 127.81818181818181
+(1 行)
+
+app=# insert into memo(id,data,data2) values(generate_series(2000,10000),'Fragment','Confirmation');
+INSERT 0 8001
+app=# SELECT relpages, reltuples, reltuples/relpages as pagedata
+FROM pg_class WHERE relname = 'memo';
+ relpages | reltuples |      pagedata      
+----------+-----------+--------------------
+       11 |      1406 | 127.81818181818181
+(1 行)
+
+
+app=# analyze memo;
+ANALYZE
+app=# SELECT relpages, reltuples, reltuples/relpages as pagedata
+FROM pg_class WHERE relname = 'memo';
+ relpages | reltuples |      pagedata      
+----------+-----------+--------------------
+       70 |      9407 | 134.38571428571427
+(1 行)
+
+app=# 
+
+
+```
