@@ -110,7 +110,7 @@ app=# select pg_backend_pid();
 ```
 
 
-- 統計情報の更新
+- 統計情報の更新(通常はAUTO VACUUMで自動的に統計も更新される)
 ```
 
 app=# SELECT relpages, reltuples, reltuples/relpages as pagedata
