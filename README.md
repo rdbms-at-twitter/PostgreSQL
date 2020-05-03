@@ -139,6 +139,12 @@ FROM pg_class WHERE relname = 'memo';
        70 |      9407 | 134.38571428571427
 (1 行)
 
+app=# insert into memo(id,data,data2) values(generate_series(1,20000),'Fragment','Confirmation');
+
+app=# analyze verbose memo;
+INFO:  "public.memo"を解析しています
+INFO:  "memo": 636ページの内636をスキャン。86410の有効な行と3の不要な行が存在。30000行をサンプリング。推定総行数は86410
+ANALYZE
 app=# 
 
 
