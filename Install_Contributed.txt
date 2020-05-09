@@ -1,0 +1,127 @@
+[root@CL-SLAVE01 admin]# yum search postgres | grep contrib
+postgresql-contrib.x86_64 : Extension modules distributed with PostgreSQL
+postgresql10-contrib.x86_64 : Contributed source and binaries distributed with
+postgresql11-contrib.x86_64 : Contributed source and binaries distributed with
+postgresql12-contrib.x86_64 : Contributed source and binaries distributed with
+postgresql94-contrib.x86_64 : Contributed source and binaries distributed with
+postgresql95-contrib.x86_64 : Contributed source and binaries distributed with
+postgresql96-contrib.x86_64 : Contributed source and binaries distributed with
+[root@CL-SLAVE01 admin]# yum install postgresql-contrib.x86_64
+読み込んだプラグイン:fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirrors.cat.net
+ * extras: mirrors.cat.net
+ * updates: mirrors.cat.net
+base                                                                                                                                                              | 3.6 kB  00:00:00     
+extras                                                                                                                                                            | 2.9 kB  00:00:00     
+pgdg10                                                                                                                                                            | 3.6 kB  00:00:00     
+pgdg11                                                                                                                                                            | 3.6 kB  00:00:00     
+pgdg12                                                                                                                                                            | 3.6 kB  00:00:00     
+pgdg94                                                                                                                                                            | 3.6 kB  00:00:00     
+pgdg95                                                                                                                                                            | 3.6 kB  00:00:00     
+pgdg96                                                                                                                                                            | 3.6 kB  00:00:00     
+updates                                                                                                                                                           | 2.9 kB  00:00:00     
+依存性の解決をしています
+--> トランザクションの確認を実行しています。
+---> パッケージ postgresql-contrib.x86_64 0:9.2.24-2.el7_7 を インストール
+--> 依存性の処理をしています: postgresql-libs(x86-64) = 9.2.24-2.el7_7 のパッケージ: postgresql-contrib-9.2.24-2.el7_7.x86_64
+--> 依存性の処理をしています: postgresql(x86-64) = 9.2.24-2.el7_7 のパッケージ: postgresql-contrib-9.2.24-2.el7_7.x86_64
+--> 依存性の処理をしています: libossp-uuid.so.16()(64bit) のパッケージ: postgresql-contrib-9.2.24-2.el7_7.x86_64
+--> トランザクションの確認を実行しています。
+---> パッケージ postgresql.x86_64 0:9.2.24-2.el7_7 を インストール
+---> パッケージ postgresql-libs.x86_64 0:9.2.24-2.el7_7 を インストール
+---> パッケージ uuid.x86_64 0:1.6.2-26.el7 を インストール
+--> 依存性解決を終了しました。
+
+依存性を解決しました
+
+=========================================================================================================================================================================================
+ Package                                            アーキテクチャー                       バージョン                                      リポジトリー                             容量
+=========================================================================================================================================================================================
+インストール中:
+ postgresql-contrib                                 x86_64                                 9.2.24-2.el7_7                                  updates                                 552 k
+依存性関連でのインストールをします:
+ postgresql                                         x86_64                                 9.2.24-2.el7_7                                  updates                                 3.0 M
+ postgresql-libs                                    x86_64                                 9.2.24-2.el7_7                                  updates                                 234 k
+ uuid                                               x86_64                                 1.6.2-26.el7                                    base                                     55 k
+
+トランザクションの要約
+=========================================================================================================================================================================================
+インストール  1 パッケージ (+3 個の依存関係のパッケージ)
+
+総ダウンロード容量: 3.8 M
+インストール容量: 18 M
+Is this ok [y/d/N]: y
+Downloading packages:
+(1/4): postgresql-contrib-9.2.24-2.el7_7.x86_64.rpm                                                                                                               | 552 kB  00:00:01     
+(2/4): postgresql-libs-9.2.24-2.el7_7.x86_64.rpm                                                                                                                  | 234 kB  00:00:01     
+(3/4): uuid-1.6.2-26.el7.x86_64.rpm                                                                                                                               |  55 kB  00:00:01     
+(4/4): postgresql-9.2.24-2.el7_7.x86_64.rpm                                                                                                                       | 3.0 MB  00:00:06     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+合計                                                                                                                                                     642 kB/s | 3.8 MB  00:00:06     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  インストール中          : postgresql-libs-9.2.24-2.el7_7.x86_64                                                                                                                    1/4 
+  インストール中          : postgresql-9.2.24-2.el7_7.x86_64                                                                                                                         2/4 
+  インストール中          : uuid-1.6.2-26.el7.x86_64                                                                                                                                 3/4 
+  インストール中          : postgresql-contrib-9.2.24-2.el7_7.x86_64                                                                                                                 4/4 
+  検証中                  : postgresql-9.2.24-2.el7_7.x86_64                                                                                                                         1/4 
+  検証中                  : postgresql-libs-9.2.24-2.el7_7.x86_64                                                                                                                    2/4 
+  検証中                  : uuid-1.6.2-26.el7.x86_64                                                                                                                                 3/4 
+  検証中                  : postgresql-contrib-9.2.24-2.el7_7.x86_64                                                                                                                 4/4 
+
+インストール:
+  postgresql-contrib.x86_64 0:9.2.24-2.el7_7                                                                                                                                             
+
+依存性関連をインストールしました:
+  postgresql.x86_64 0:9.2.24-2.el7_7                            postgresql-libs.x86_64 0:9.2.24-2.el7_7                            uuid.x86_64 0:1.6.2-26.el7                           
+
+完了しました!
+[root@CL-SLAVE01 admin]# 
+
+
+
+[root@CL-SLAVE01 admin]# yum install postgresql12-contrib.x86_64
+読み込んだプラグイン:fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirrors.cat.net
+ * extras: mirrors.cat.net
+ * updates: mirrors.cat.net
+依存性の解決をしています
+--> トランザクションの確認を実行しています。
+---> パッケージ postgresql12-contrib.x86_64 0:12.2-2PGDG.rhel7 を インストール
+--> 依存性解決を終了しました。
+
+依存性を解決しました
+
+=========================================================================================================================================================================================
+ Package                                             アーキテクチャー                      バージョン                                        リポジトリー                           容量
+=========================================================================================================================================================================================
+インストール中:
+ postgresql12-contrib                                x86_64                                12.2-2PGDG.rhel7                                  pgdg12                                608 k
+
+トランザクションの要約
+=========================================================================================================================================================================================
+インストール  1 パッケージ
+
+総ダウンロード容量: 608 k
+インストール容量: 2.1 M
+Is this ok [y/d/N]: y
+Downloading packages:
+postgresql12-contrib-12.2-2PGDG.rhel7.x86_64.rpm                                                                                                                  | 608 kB  00:00:03     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  インストール中          : postgresql12-contrib-12.2-2PGDG.rhel7.x86_64                                                                                                             1/1 
+  検証中                  : postgresql12-contrib-12.2-2PGDG.rhel7.x86_64                                                                                                             1/1 
+
+インストール:
+  postgresql12-contrib.x86_64 0:12.2-2PGDG.rhel7                                                                                                                                         
+
+完了しました!
+[root@CL-SLAVE01 admin]# 
+
+
