@@ -149,3 +149,42 @@ app=#
 
 
 ```
+
+- EXPLAIN(シークエンシャルスキャンのコスト)
+
+```
+app=# select name,setting,category from pg_settings where name like '%cost';
+          name           | setting |                   category                    
+-------------------------+---------+-----------------------------------------------
+ cpu_index_tuple_cost    | 0.005   | 問い合わせのチューニング / プランナコスト定数
+ cpu_operator_cost       | 0.0025  | 問い合わせのチューニング / プランナコスト定数
+ cpu_tuple_cost          | 0.01    | 問い合わせのチューニング / プランナコスト定数
+ jit_above_cost          | 100000  | 問い合わせのチューニング / プランナコスト定数
+ jit_inline_above_cost   | 500000  | 問い合わせのチューニング / プランナコスト定数
+ jit_optimize_above_cost | 500000  | 問い合わせのチューニング / プランナコスト定数
+ parallel_setup_cost     | 1000    | 問い合わせのチューニング / プランナコスト定数
+ parallel_tuple_cost     | 0.1     | 問い合わせのチューニング / プランナコスト定数
+ random_page_cost        | 4       | 問い合わせのチューニング / プランナコスト定数
+ seq_page_cost           | 1       | 問い合わせのチューニング / プランナコスト定数
+(10 行)
+
+app=# select relname,relpages,reltuples from pg_class where relname = 'memo';
+ relname | relpages | reltuples 
+---------+----------+-----------
+ memo    |      148 |     20000
+(1 行)
+
+app=# explain select * from memo;
+                        QUERY PLAN                         
+-----------------------------------------------------------
+ Seq Scan on memo  (cost=0.00..348.00 rows=20000 width=26)
+(1 行)
+
+app=# select (1 * 148) + (0.01 * 20000) "シークエンシャルスキャンのコスト(seq_page_cost * relpages) + (cpu_tuple_cost * reltuples)";
+
+シークエンシャルスキャンのコスト(seq_page_cost * relpages) + (cpu_tuple_cost * reltuples)
+-------------------------------------------------
+                                          348.00
+(1 行)
+
+```
