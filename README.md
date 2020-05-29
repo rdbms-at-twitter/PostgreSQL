@@ -9,6 +9,7 @@ https://wiki.postgresql.org/wiki/Disk_Usage/ja
 
 - Promptの設定
 
+```
 -bash-4.2$ psql app  -P pager=off -c "\d"
          List of relations
  Schema |  Name  | Type  |  Owner   
@@ -29,7 +30,7 @@ app=# select now();
 
 Time: 1.151 ms
 app=# 
-
+```
 
 
 
