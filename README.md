@@ -18,18 +18,23 @@ https://wiki.postgresql.org/wiki/Disk_Usage/ja
 (1 row)
 
 
-app=# \pset pager
+-bash-4.2$ psql app 
+psql (9.2.24)
+Type "help" for help.
+
+app=# \pset pager off
 Pager usage is off.
 app=# \timing
 Timing is on.
 app=# select now();
               now              
 -------------------------------
- 2020-05-29 22:06:44.975406+00
+ 2020-05-29 22:13:15.775279+00
 (1 row)
 
-Time: 1.151 ms
+Time: 0.351 ms
 app=# 
+
 ```
 
 
