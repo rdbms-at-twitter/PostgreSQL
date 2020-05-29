@@ -5,6 +5,34 @@ https://wiki.postgresql.org/wiki/Disk_Usage/ja
 
 #### 良く使うコマンド
 
+
+
+- Promptの設定
+
+-bash-4.2$ psql app  -P pager=off -c "\d"
+         List of relations
+ Schema |  Name  | Type  |  Owner   
+--------+--------+-------+----------
+ public | t_post | table | app_user
+(1 row)
+
+
+app=# \pset pager
+Pager usage is off.
+app=# \timing
+Timing is on.
+app=# select now();
+              now              
+-------------------------------
+ 2020-05-29 22:06:44.975406+00
+(1 row)
+
+Time: 1.151 ms
+app=# 
+
+
+
+
 - 処理中Processの確認
 
 ```
