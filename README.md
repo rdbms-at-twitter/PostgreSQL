@@ -222,3 +222,33 @@ app=# select (1 * 148) + (0.01 * 20000) "シークエンシャルスキャンの
 (1 行)
 
 ```
+
+- How to Check Buffer Pool
+
+```
+postgres=# create extension pg_buffercache;
+CREATE EXTENSION
+
+
+postgres=# \c development
+You are now connected to database "development" as user "postgres".
+taskleaf_development=# \d
+                        List of relations
+ Schema |               Name                |   Type   |  Owner   
+--------+-----------------------------------+----------+----------
+ public | active_storage_attachments        | table    | api
+ public | active_storage_attachments_id_seq | sequence | api
+ public | active_storage_blobs              | table    | api
+ public | active_storage_blobs_id_seq       | sequence | api
+ public | ar_internal_metadata              | table    | api
+ public | kb                                | table    | api
+ public | kb_id_seq                         | sequence | api
+ public | pg_buffercache                    | view     | postgres
+ public | schema_migrations                 | table    | api
+
+(13 rows)
+
+```
+
+reference: https://www.postgresql.org/docs/13/pgbuffercache.html
+
