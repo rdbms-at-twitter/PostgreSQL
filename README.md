@@ -3,6 +3,12 @@
 #### Usefull Site
 https://wiki.postgresql.org/wiki/Disk_Usage/ja
 
+#### パラメータの説明
+https://pgtune.leopard.in.ua/#/
+
+#### メモリーなどのパラメータ設定の参考値(実際の処理内容や接続数によります）
+https://pgtune.leopard.in.ua/#/
+
 #### 良く使うコマンド
 
 
