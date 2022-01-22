@@ -258,3 +258,63 @@ taskleaf_development=# \d
 
 reference: https://www.postgresql.org/docs/13/pgbuffercache.html
 
+## FTS for speed up text document Search
+
+```
+development-# CREATE EXTENSION pg_bigm;
+CREATE EXTENSION
+development=# \d tasks;
+                                      Table "public.tasks"
+   Column    |            Type             |                     Modifiers                      
+-------------+-----------------------------+----------------------------------------------------
+ id          | bigint                      | not null default nextval('tasks_id_seq'::regclass)
+ name        | character varying(100)      | not null
+ description | text                        | 
+ created_at  | timestamp without time zone | not null
+ updated_at  | timestamp without time zone | not null
+ user_id     | bigint                      | not null
+Indexes:
+    "tasks_pkey" PRIMARY KEY, btree (id)
+    "index_tasks_on_user_id" btree (user_id)
+
+
+development=# explain select count(*) from tasks where description like '%ダンプ%';
+                         QUERY PLAN                         
+------------------------------------------------------------
+ Aggregate  (cost=28.49..28.50 rows=1 width=0)
+   ->  Seq Scan on tasks  (cost=0.00..28.49 rows=1 width=0)
+         Filter: (description ~~ '%ダンプ%'::text)
+(3 rows)
+
+development=# create index idx_bigram_task_description on tasks using gin (description gin_bigm_ops);
+CREATE INDEX
+
+
+development=# \d tasks;
+                                      Table "public.tasks"
+   Column    |            Type             |                     Modifiers                      
+-------------+-----------------------------+----------------------------------------------------
+ id          | bigint                      | not null default nextval('tasks_id_seq'::regclass)
+ name        | character varying(100)      | not null
+ description | text                        | 
+ created_at  | timestamp without time zone | not null
+ updated_at  | timestamp without time zone | not null
+ user_id     | bigint                      | not null
+Indexes:
+    "tasks_pkey" PRIMARY KEY, btree (id)
+    "idx_bigram_task_description" gin (description gin_bigm_ops)
+    "index_tasks_on_user_id" btree (user_id)
+
+development=# explain select count(*) from tasks where description like '%ダンプ%';
+                                           QUERY PLAN                                            
+-------------------------------------------------------------------------------------------------
+ Aggregate  (cost=24.02..24.03 rows=1 width=0)
+   ->  Bitmap Heap Scan on tasks  (cost=20.00..24.01 rows=1 width=0)
+         Recheck Cond: (description ~~ '%ダンプ%'::text)
+         ->  Bitmap Index Scan on idx_bigram_task_description  (cost=0.00..20.00 rows=1 width=0)
+               Index Cond: (description ~~ '%ダンプ%'::text)
+(5 rows)
+
+development=# 
+
+```
