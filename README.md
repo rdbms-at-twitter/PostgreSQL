@@ -1,10 +1,13 @@
 ### This repository is used for gathering useful scripts for managing PostgreSQL.
 
 #### Usefull Site
+
 https://wiki.postgresql.org/wiki/Disk_Usage/ja
+https://pgpedia.info/p/pg_stat_database_conflicts.html
 
 #### パラメータの説明
 https://pgtune.leopard.in.ua/#/
+https://postgresqlco.nf/doc/ja/param/
 
 #### メモリーなどのパラメータ設定の参考値(実際の処理内容や接続数によります）
 https://pgtune.leopard.in.ua/#/
