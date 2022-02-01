@@ -1,4 +1,6 @@
 SELECT
+pg_stat_activity.pid,
+pg_locks.granted,
 pg_class.relname AS "Table"
 , CASE WHEN pg_locks.granted = 't' THEN 'Lock' ELSE 'Waiting for Lock' END AS "Lock Status"
 , pg_locks.mode AS "Lock Level"
@@ -9,4 +11,4 @@ pg_class.relname AS "Table"
 FROM
 pg_locks INNER JOIN pg_stat_activity ON pg_locks.pid = pg_stat_activity.pid
 INNER JOIN pg_class ON pg_locks.relation = pg_class.oid
-WHERE pg_locks.locktype = 'relation' and pg_class.relname like '%aurora%';
+WHERE pg_locks.locktype = 'relation';
