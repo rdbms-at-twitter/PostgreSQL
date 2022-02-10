@@ -13,4 +13,4 @@ WHERE  i.indexrelid = s.indexrelid
        and s.idx_scan = 0
        and s.idx_tup_read = 0
        and s.idx_tup_fetch = 0
-       and i.indisunique <> 'y';
+       and i.indisunique <> 'y' --ignore pk and uk;

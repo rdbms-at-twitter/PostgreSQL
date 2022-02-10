@@ -15,4 +15,4 @@ GROUP BY table_name,
          att.attname,
          indclass,
          amname, indkey
-HAVING count(*) > 1;
+HAVING count(*) > 1 -- find duplicate indexes;
