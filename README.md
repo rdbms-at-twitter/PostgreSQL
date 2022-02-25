@@ -232,6 +232,37 @@ app=# select (1 * 148) + (0.01 * 20000) "シークエンシャルスキャンの
 
 ```
 
+
+- How to Check Table Size
+
+```
+POC=# SELECT                                             
+ pp.relname as "Table",
+ pc.relkind AS objecttype,
+ pc.reltuples AS "#entries", 
+ pg_size_pretty(pg_total_relation_size(pp.relid)) As "Total Size",
+ pg_size_pretty(pc.relpages::bigint*8*1024) AS "Table size",
+ pg_size_pretty(pg_total_relation_size(pp.relid) - pg_relation_size(pp.relid)) as "External Size(idx)"
+ FROM pg_catalog.pg_statio_user_tables pp inner join pg_class pc on pp.relname = pc.relname
+ inner join pg_stat_all_tables pat on pat.relname = pc.relname
+ ORDER BY pg_total_relation_size(pp.relid) DESC limit 10;
+ 
+      Table      | objecttype |   #entries   | Total Size | Table size | External Size(idx)
+-----------------+------------+--------------+------------+------------+--------------------
+ trains          | r          | 1.000002e+06 | 87 MB      | 65 MB      | 21 MB
+ spatial_ref_sys | r          |         8500 | 7280 kB    | 6936 kB    | 344 kB
+ sample_pm03     | r          |        10000 | 712 kB     | 440 kB     | 272 kB
+ sample_pm02     | r          |        10000 | 712 kB     | 440 kB     | 272 kB
+ sample_pm01     | r          |         9999 | 712 kB     | 440 kB     | 272 kB
+ sample_pm05     | r          |        10001 | 712 kB     | 440 kB     | 272 kB
+ sample_pm04     | r          |        10000 | 712 kB     | 440 kB     | 272 kB
+ p12a-14_01      | r          |           35 | 40 kB      | 8192 bytes | 32 kB
+ travel_y2022m02 | r          |            2 | 40 kB      | 8192 bytes | 32 kB
+ travel_y2022m01 | r          |            3 | 40 kB      | 8192 bytes | 32 kB
+(10 rows)
+
+```
+
 - How to Check Buffer Pool
 
 ```
