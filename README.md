@@ -74,9 +74,28 @@ backend_xmin     |
 query            |                                   #最後に実行したクエリー
 backend_type     | walsender
 
-app=# 
+```
+
+- 処理中のProcess確認と説明
 
 ```
+SELECT
+usename,
+client_addr,
+pid "バックエンドのプロセスID",
+state "バックエンドの総体的な状態",
+state_change "stateの最終変更時刻",
+backend_start "プロセスが開始した時刻です。 ",
+xact_start "現在のトランザクションが開始した時刻",
+wait_event_type "が待機しているイベントがあればその型",
+wait_event "バックエンドが現在待機している場合は待機イベント名",
+query_start "現在有効な問い合わせが開始した時刻です。 もしstateがactiveでない場合は直前の問い合わせが開始した時刻。",
+backend_xid "このバックエンドの最上位のトランザクション識別子",
+backend_type "現在のバックエンドの種別",
+substr(query, 0,50) "Query"
+FROM pg_stat_activity ORDER BY query_start;
+```
+
 
 - Lock PIDの確認
 
